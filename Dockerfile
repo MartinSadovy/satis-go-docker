@@ -1,10 +1,12 @@
-FROM composer/satis
+FROM composer/satis:latest
 
 ENV SATIS_GO_BIND 0.0.0.0:8080
 ENV SATIS_GO_DB_PATH /opt/satis-go/data
 ENV SATIS_GO_REPOUI_PATH /usr/share/nginx/htlm
 ENV SATIS_GO_REPO_NAME "My Satis"
 ENV SATIS_GO_REPO_HOST http://localhost:8080
+ENV SATIS_GO_USERNAME ""
+ENV SATIS_GO_PASSWORD ""
 ENV PATH="/satis/bin:${PATH}"
 
 # based on https://github.com/frol/docker-alpine-glibc/blob/alpine-3.4/Dockerfile
@@ -45,14 +47,15 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
 
 # install satis-go
 RUN mkdir -p /opt/satis-go && \
-    wget -qO- https://github.com/benschw/satis-go/releases/download/0.1.1/satis-go-`uname`-`uname -m`.gz | \
-        gunzip > /opt/satis-go/satis-go && \
+    wget -qO- https://github.com/koshatul/satis-go/releases/download/0.1.2/satis-go-linux-amd64.tar.gz | \
+    tar xvfz - -C /opt/satis-go/ && \
     chmod +x /opt/satis-go/satis-go && \
     wget -qO-  https://github.com/benschw/satis-admin/releases/download/0.1.1/admin-ui.tar.gz | \
         tar xzv -C /opt/satis-go/
 
 ADD entrypoint.sh /entrypoint.sh
 ADD config.template.yaml /opt/satis-go/config.template.yaml
+ADD ssh_config /root/.ssh/config
 
 EXPOSE 8080
 
