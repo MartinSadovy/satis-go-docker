@@ -19,6 +19,8 @@ docker service create \
   --env "SATIS_GO_REPO_NAME=My Composer" \
   --env "SATIS_GO_REPO_HOST=http://composer.example.com" \
   --env "GITHUB_TOKEN=TOKEN" \
+  --env "GITLAB_TOKEN=TOKEN" \
+  --env "GITLAB_HOST=mygitlabinstance.com" \
   --log-opt max-size=10m \
   --log-opt max-file=3 \
   koshatul/satis-go-docker:latest
